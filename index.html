@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TrialScreen — Board Pack</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<style>
+  :root { --teal: #01696F; --teal-hover: #0C4E54; --text: #28251D; --muted: #7A7974; --faint: #BAB9B4; --border: #D4D1CA; --bg: #F7F6F2; --surface: #FFFFFF; --surface-alt: #FBFBF9; }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.55; color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; }
+  .container { max-width: 880px; margin: 0 auto; padding: 48px 32px 80px; }
+  .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 64px; padding-bottom: 16px; border-bottom: 2px solid var(--teal); }
+  .brand { font-size: 13px; font-weight: 700; letter-spacing: 0.15em; color: var(--teal); text-transform: uppercase; }
+  .confidential { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; }
+  .gate { max-width: 440px; margin: 80px auto 0; padding: 40px; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; }
+  .gate h1 { margin: 0 0 12px; font-size: 24px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
+  .gate p { margin: 0 0 24px; font-size: 14px; color: var(--muted); line-height: 1.55; }
+  .gate input { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 3px; font-size: 15px; font-family: inherit; color: var(--text); background: var(--surface-alt); outline: none; transition: border-color 0.15s; }
+  .gate input:focus { border-color: var(--teal); }
+  .gate button { margin-top: 14px; width: 100%; padding: 12px 16px; background: var(--teal); color: white; border: none; border-radius: 3px; font-size: 14px; font-weight: 600; font-family: inherit; letter-spacing: 0.02em; cursor: pointer; transition: background-color 0.15s; }
+  .gate button:hover { background: var(--teal-hover); }
+  .gate .error { margin-top: 12px; font-size: 13px; color: #A12C7B; display: none; }
+  .gate .error.show { display: block; }
+  .content { display: none; }
+  .content.unlocked { display: block; }
+  .intro h1 { margin: 0 0 12px; font-size: 34px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
+  .intro .subtitle { margin: 0 0 8px; font-size: 18px; color: var(--muted); font-weight: 400; }
+  .intro .date { margin: 0 0 48px; font-size: 13px; color: var(--faint); letter-spacing: 0.08em; text-transform: uppercase; }
+  .section-title { margin: 48px 0 20px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; color: var(--teal); text-transform: uppercase; }
+  .section-desc { margin: 0 0 24px; font-size: 15px; color: var(--muted); max-width: 680px; }
+  .doc-list { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+  .doc { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; padding: 20px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; transition: border-color 0.15s; }
+  .doc:hover { border-color: var(--teal); }
+  .doc-body h3 { margin: 0 0 4px; font-size: 16px; font-weight: 700; color: var(--text); }
+  .doc-body p { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .doc-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .doc-type { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--teal); background: #E8F0F1; padding: 3px 8px; border-radius: 2px; text-transform: uppercase; }
+  .doc-link { font-size: 13px; font-weight: 600; color: var(--teal); text-decoration: none; padding: 6px 14px; border: 1px solid var(--teal); border-radius: 3px; transition: background-color 0.15s, color 0.15s; }
+  .doc-link:hover { background: var(--teal); color: white; }
+  .asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 8px; }
+  .asset { aspect-ratio: 1/1; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; overflow: hidden; cursor: pointer; transition: transform 0.15s, border-color 0.15s; }
+  .asset:hover { transform: translateY(-2px); border-color: var(--teal); }
+  .asset img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .links { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .ext-link { display: block; padding: 18px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; text-decoration: none; color: var(--text); transition: border-color 0.15s; }
+  .ext-link:hover { border-color: var(--teal); }
+  .ext-link .label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: var(--teal); text-transform: uppercase; margin-bottom: 6px; display: block; }
+  .ext-link .title { font-size: 15px; font-weight: 700; color: var(--text); }
+  .ext-link .desc { margin-top: 4px; font-size: 13px; color: var(--muted); }
+  footer { margin-top: 80px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--faint); text-align: center; letter-spacing: 0.04em; }
+  @media (max-width: 600px) { .container { padding: 24px 16px 60px; } .intro h1 { font-size: 26px; } .doc { grid-template-columns: 1fr; } .doc-meta { flex-direction: row; align-items: center; justify-content: space-between; } }
+</style>
+</head>
+<body>
+
+<div class="container" id="gate-view">
+  <div class="header">
+    <div class="brand">TrialScreen</div>
+    <div class="confidential">Board Pack · Confidential</div>
+  </div>
+  <form class="gate" id="gate-form" autocomplete="off">
+    <h1>Board Pack Access</h1>
+    <p>Enter the access password provided to you to view board documents, strategy papers and content pipelines.</p>
+    <input type="password" id="password" placeholder="Access password" autofocus />
+    <button type="submit">Unlock</button>
+    <div class="error" id="error">Incorrect password. Please try again.</div>
+  </form>
+</div>
+
+<div class="container content" id="content-view">
+  <div class="header">
+    <div class="brand">TrialScreen</div>
+    <div class="confidential">Confidential</div>
+  </div>
+  <div class="intro">
+    <h1>Board Pack</h1>
+    <p class="subtitle">Strategy, competitive analysis, content pipelines, and visual assets.</p>
+    <p class="date">April 2026</p>
+  </div>
+  <div class="section-title">For the Board</div>
+  <p class="section-desc">The three documents designed to be read together: the in-meeting decision brief, the supporting strategy, and the presentation deck.</p>
+  <ul class="doc-list" id="board-docs"></ul>
+  <div class="section-title">Content Pipelines</div>
+  <p class="section-desc">Fully-written first-draft content ready for editorial review, segmented by audience.</p>
+  <ul class="doc-list" id="pipeline-docs"></ul>
+  <div class="section-title">Visual Assets</div>
+  <p class="section-desc">Branded social media posts combining AI-generated photography with TrialScreen identity.</p>
+  <div class="asset-grid" id="asset-grid"></div>
+  <div class="section-title">Live Tools</div>
+  <p class="section-desc">Working prototypes linked from this pack.</p>
+  <div class="links" id="ext-links"></div>
+  <footer>TrialScreen · Board Pack · April 2026<br />Confidential — do not distribute outside authorised recipients.</footer>
+</div>
+
+<script>
+(() => {
+  const EXPECTED_HASH = '8b6d3fccd6a05ec4ea62fbc336bdeb856b96a9ce1591f5b111fda997aab1d429';
+  const SALT = 'trialscreen-board-pack-2026';
+  const ITERATIONS = 100000;
+
+  async function hashPassword(password) {
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), { name: 'PBKDF2' }, false, ['deriveBits']);
+    const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: enc.encode(SALT), iterations: ITERATIONS, hash: 'SHA-256' }, keyMaterial, 256);
+    return Array.from(new Uint8Array(bits)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  const boardDocs = [
+    { title: 'Board Decision Brief', desc: '3 pages · 8 decisions, recommendations, 30/60/90-day plan, budget', type: 'PDF', url: 'documents/trialscreen-board-decision-brief.pdf' },
+    { title: 'Communications Strategy', desc: '24 pages · Current state, competitive landscape, recommended plan', type: 'PDF', url: 'documents/trialscreen-comms-strategy.pdf' },
+    { title: 'Board Presentation Deck', desc: '24 slides · Widescreen deck for the meeting', type: 'PPTX', url: 'documents/trialscreen-board-deck.pptx' }
+  ];
+
+  const pipelineDocs = [
+    { title: 'Sponsor Content Pipeline', desc: '87 pages · B2B content for pharma, CRO, site and institutional audiences. 15 LinkedIn posts, 4 long-form articles, 3 email sequences, 6 webinars, 3 case studies, conference plan.', type: 'PDF', url: 'documents/trialscreen-sponsor-content-pipeline.pdf' },
+    { title: 'Participant Content Pipeline', desc: '97 pages · Patient and community content. 20 Facebook posts, 10 Instagram + Reels, 6 blog articles, 3 Patient Voices, 6 newsletters, 3 YouTube scripts, 4 webinars, 6 awareness campaigns.', type: 'PDF', url: 'documents/trialscreen-participant-content-pipeline.pdf' }
+  ];
+
+  const assets = [
+    { file: 'visual-assets/post-ts001-breast-cancer.png', alt: 'Breast cancer lumpectomy post' },
+    { file: 'visual-assets/post-ts002-fiber-boost.png', alt: 'Fiber-Boost lung cancer trial post' },
+    { file: 'visual-assets/post-ts004-menopause.png', alt: 'Menopause ESTEEM trial post' },
+    { file: 'visual-assets/post-ts007-arts-blues.png', alt: 'Arts for the Blues post' },
+    { file: 'visual-assets/post-ts008-gut-heart.png', alt: 'Gut-heart trial post' }
+  ];
+
+  const extLinks = [
+    { label: 'Web App · Demo', title: 'Marketing Hub', desc: 'Campaign, CRM, content workflow and compliance dashboard', url: 'https://akamu47.github.io/trialscreen-marketing-hub/' }
+  ];
+
+  function renderDocs(items, containerId) {
+    const html = items.map(d => `<li class="doc"><div class="doc-body"><h3>${d.title}</h3><p>${d.desc}</p></div><div class="doc-meta"><span class="doc-type">${d.type}</span><a class="doc-link" href="${d.url}" target="_blank" rel="noopener">Open</a></div></li>`).join('');
+    document.getElementById(containerId).innerHTML = html;
+  }
+
+  function renderAssets() {
+    const html = assets.map(a => `<a class="asset" href="${a.file}" target="_blank" rel="noopener"><img src="${a.file}" alt="${a.alt}" loading="lazy" /></a>`).join('');
+    document.getElementById('asset-grid').innerHTML = html;
+  }
+
+  function renderLinks() {
+    const html = extLinks.map(l => `<a class="ext-link" href="${l.url}" target="_blank" rel="noopener"><span class="label">${l.label}</span><div class="title">${l.title}</div><div class="desc">${l.desc}</div></a>`).join('');
+    document.getElementById('ext-links').innerHTML = html;
+  }
+
+  function unlock() {
+    document.getElementById('gate-view').style.display = 'none';
+    document.getElementById('content-view').classList.add('unlocked');
+    renderDocs(boardDocs, 'board-docs');
+    renderDocs(pipelineDocs, 'pipeline-docs');
+    renderAssets();
+    renderLinks();
+  }
+
+  document.getElementById('gate-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const pwd = document.getElementById('password').value;
+    const errorEl = document.getElementById('error');
+    errorEl.classList.remove('show');
+    try {
+      const hash = await hashPassword(pwd);
+      if (hash === EXPECTED_HASH) { unlock(); }
+      else { errorEl.classList.add('show'); document.getElementById('password').value = ''; }
+    } catch (err) {
+      errorEl.textContent = 'Browser unable to verify password. Please try a modern browser.';
+      errorEl.classList.add('show');
+    }
+  });
+})();
+</script>
+</body>
+</html>
