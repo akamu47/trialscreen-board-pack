@@ -5,96 +5,454 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>TrialScreen — Board Pack</title>
 <meta name="robots" content="noindex, nofollow" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="icon" type="image/x-icon" href="favicon.ico" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/tokens.css" />
 <style>
-  :root { --teal: #01696F; --teal-hover: #0C4E54; --text: #28251D; --muted: #7A7974; --faint: #BAB9B4; --border: #D4D1CA; --bg: #F7F6F2; --surface: #FFFFFF; --surface-alt: #FBFBF9; }
-  *, *::before, *::after { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.55; color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; }
-  .container { max-width: 880px; margin: 0 auto; padding: 48px 32px 80px; }
-  .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 64px; padding-bottom: 16px; border-bottom: 2px solid var(--teal); }
-  .brand { font-size: 13px; font-weight: 700; letter-spacing: 0.15em; color: var(--teal); text-transform: uppercase; }
-  .confidential { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; }
-  .gate { max-width: 440px; margin: 80px auto 0; padding: 40px; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; }
-  .gate h1 { margin: 0 0 12px; font-size: 24px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
-  .gate p { margin: 0 0 24px; font-size: 14px; color: var(--muted); line-height: 1.55; }
-  .gate input { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 3px; font-size: 15px; font-family: inherit; color: var(--text); background: var(--surface-alt); outline: none; transition: border-color 0.15s; }
-  .gate input:focus { border-color: var(--teal); }
-  .gate button { margin-top: 14px; width: 100%; padding: 12px 16px; background: var(--teal); color: white; border: none; border-radius: 3px; font-size: 14px; font-weight: 600; font-family: inherit; letter-spacing: 0.02em; cursor: pointer; transition: background-color 0.15s; }
-  .gate button:hover { background: var(--teal-hover); }
-  .gate .error { margin-top: 12px; font-size: 13px; color: #A12C7B; display: none; }
-  .gate .error.show { display: block; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100dvh; }
+  body {
+    font-family: var(--ts-font-body);
+    font-size: var(--ts-text-body);
+    line-height: 1.55;
+    color: var(--ts-text);
+    background: var(--ts-bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--ts-font-display);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+
+  /* ── Sticky header ──────────────────────────────── */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: 64px;
+    background: #FFFFFF;
+    border-bottom: 1px solid var(--ts-border);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--ts-space-xl);
+    gap: var(--ts-space-md);
+    justify-content: space-between;
+  }
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--ts-space-sm);
+    text-decoration: none;
+    color: var(--ts-text);
+  }
+  .header-brand img {
+    width: 28px;
+    height: 28px;
+    display: block;
+    flex-shrink: 0;
+  }
+  .header-brand .wordmark {
+    font-family: var(--ts-font-display);
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--ts-text);
+    letter-spacing: -0.01em;
+  }
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--ts-space-lg);
+  }
+  .header-nav a {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ts-text-muted);
+    text-decoration: none;
+    transition: color 120ms;
+  }
+  .header-nav a:hover { color: var(--ts-purple); }
+  .header-nav a.active { color: var(--ts-purple); font-weight: 600; }
+
+  /* ── Gate page ──────────────────────────────────── */
+  .gate-page {
+    min-height: calc(100dvh - 64px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ts-space-2xl) var(--ts-space-xl);
+    background: var(--ts-grad-subtle);
+  }
+  .gate-card {
+    max-width: 440px;
+    width: 100%;
+    background: #FFFFFF;
+    border: 1px solid var(--ts-border);
+    border-radius: var(--ts-radius-xl);
+    padding: var(--ts-space-2xl) var(--ts-space-xl);
+    box-shadow: 0 8px 32px rgba(119,58,150,0.12);
+  }
+  .gate-card .gate-eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--ts-purple);
+    text-transform: uppercase;
+    margin-bottom: var(--ts-space-md);
+    font-family: var(--ts-font-body);
+  }
+  .gate-card h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--ts-text);
+    margin-bottom: var(--ts-space-sm);
+  }
+  .gate-card p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ts-text-muted);
+    margin-bottom: var(--ts-space-lg);
+  }
+  .gate-card input[type="password"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--ts-border);
+    border-radius: var(--ts-radius-md);
+    font-size: 15px;
+    font-family: var(--ts-font-body);
+    color: var(--ts-text);
+    background: var(--ts-surface-alt);
+    outline: none;
+    transition: border-color 120ms;
+  }
+  .gate-card input[type="password"]:focus { border-color: var(--ts-purple); }
+  .gate-card .unlock-btn {
+    margin-top: var(--ts-space-md);
+    width: 100%;
+    padding: 13px 20px;
+    background: var(--ts-magenta);
+    color: #FFFFFF;
+    font-family: var(--ts-font-body);
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--ts-radius-md);
+    cursor: pointer;
+    transition: background 120ms;
+    letter-spacing: 0.01em;
+  }
+  .gate-card .unlock-btn:hover { background: var(--ts-magenta-cta); }
+  .gate-card .error-msg {
+    margin-top: var(--ts-space-sm);
+    font-size: 13px;
+    color: var(--ts-error);
+    display: none;
+  }
+  .gate-card .error-msg.show { display: block; }
+
+  /* ── Content (unlocked) ─────────────────────────── */
   .content { display: none; }
   .content.unlocked { display: block; }
-  .intro h1 { margin: 0 0 12px; font-size: 34px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
-  .intro .subtitle { margin: 0 0 8px; font-size: 18px; color: var(--muted); font-weight: 400; }
-  .intro .date { margin: 0 0 48px; font-size: 13px; color: var(--faint); letter-spacing: 0.08em; text-transform: uppercase; }
-  .section-title { margin: 48px 0 20px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; color: var(--teal); text-transform: uppercase; }
-  .section-desc { margin: 0 0 24px; font-size: 15px; color: var(--muted); max-width: 680px; }
-  .doc-list { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
-  .doc { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; padding: 20px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; transition: border-color 0.15s; }
-  .doc:hover { border-color: var(--teal); }
-  .doc-body h3 { margin: 0 0 4px; font-size: 16px; font-weight: 700; color: var(--text); }
-  .doc-body p { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.5; }
-  .doc-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-  .doc-type { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--teal); background: #E8F0F1; padding: 3px 8px; border-radius: 2px; text-transform: uppercase; }
-  .doc-link { font-size: 13px; font-weight: 600; color: var(--teal); text-decoration: none; padding: 6px 14px; border: 1px solid var(--teal); border-radius: 3px; transition: background-color 0.15s, color 0.15s; }
-  .doc-link:hover { background: var(--teal); color: white; }
-  .asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 8px; }
-  .asset { aspect-ratio: 1/1; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; overflow: hidden; cursor: pointer; transition: transform 0.15s, border-color 0.15s; }
-  .asset:hover { transform: translateY(-2px); border-color: var(--teal); }
+
+  /* Hero */
+  .hero {
+    background: var(--ts-grad-hero);
+    padding: var(--ts-space-3xl) var(--ts-space-xl);
+    text-align: center;
+    color: #FFFFFF;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.07) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; max-width: 640px; margin: 0 auto; }
+  .hero-logo {
+    display: block;
+    margin: 0 auto var(--ts-space-lg);
+    height: 36px;
+    width: auto;
+  }
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: var(--ts-space-sm);
+    letter-spacing: -0.02em;
+  }
+  .hero .hero-sub {
+    font-size: 17px;
+    color: rgba(255,255,255,0.85);
+    font-weight: 400;
+    margin-bottom: var(--ts-space-sm);
+  }
+  .hero .hero-date {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+  }
+
+  /* Main layout */
+  .main { max-width: 1000px; margin: 0 auto; padding: var(--ts-space-2xl) var(--ts-space-xl) var(--ts-space-3xl); }
+
+  /* Section headers */
+  .section-header {
+    margin-bottom: var(--ts-space-lg);
+    margin-top: var(--ts-space-2xl);
+  }
+  .section-header:first-child { margin-top: 0; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: var(--ts-purple);
+    text-transform: uppercase;
+    margin-bottom: var(--ts-space-xs);
+    font-family: var(--ts-font-body);
+  }
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ts-text);
+    margin-bottom: var(--ts-space-xs);
+  }
+  .section-desc {
+    font-size: 14px;
+    color: var(--ts-text-muted);
+    max-width: 680px;
+    line-height: 1.6;
+  }
+
+  /* Document list */
+  .doc-list { list-style: none; display: grid; gap: 10px; }
+  .doc {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--ts-space-lg);
+    align-items: center;
+    padding: var(--ts-space-lg) var(--ts-space-xl);
+    background: var(--ts-surface-alt);
+    border: 1px solid var(--ts-border);
+    border-radius: var(--ts-radius-lg);
+    transition: border-color 140ms, box-shadow 140ms;
+  }
+  .doc:hover {
+    border-color: var(--ts-purple);
+    box-shadow: 0 2px 12px rgba(119,58,150,0.10);
+  }
+  .doc-body h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ts-text);
+    margin-bottom: 4px;
+  }
+  .doc-body p {
+    font-size: 13px;
+    color: var(--ts-text-muted);
+    line-height: 1.5;
+    max-width: 60ch;
+  }
+  .doc-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .doc-type {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--ts-purple);
+    background: rgba(119,58,150,0.1);
+    padding: 3px 8px;
+    border-radius: var(--ts-radius-pill);
+    text-transform: uppercase;
+  }
+  .doc-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ts-purple);
+    text-decoration: none;
+    padding: 7px 16px;
+    border: 1.5px solid var(--ts-purple);
+    border-radius: var(--ts-radius-md);
+    transition: background 120ms, color 120ms;
+    white-space: nowrap;
+  }
+  .doc-link:hover {
+    background: var(--ts-purple);
+    color: #FFFFFF;
+  }
+
+  /* Asset grid */
+  .asset-section { margin-top: var(--ts-space-sm); }
+  .asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+  .asset {
+    aspect-ratio: 1/1;
+    background: var(--ts-surface);
+    border: 1px solid var(--ts-border);
+    border-radius: var(--ts-radius-lg);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 140ms, border-color 140ms, box-shadow 140ms;
+  }
+  .asset:hover {
+    transform: translateY(-3px);
+    border-color: var(--ts-purple);
+    box-shadow: 0 6px 20px rgba(119,58,150,0.14);
+  }
   .asset img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .links { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
-  .ext-link { display: block; padding: 18px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; text-decoration: none; color: var(--text); transition: border-color 0.15s; }
-  .ext-link:hover { border-color: var(--teal); }
-  .ext-link .label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: var(--teal); text-transform: uppercase; margin-bottom: 6px; display: block; }
-  .ext-link .title { font-size: 15px; font-weight: 700; color: var(--text); }
-  .ext-link .desc { margin-top: 4px; font-size: 13px; color: var(--muted); }
-  footer { margin-top: 80px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--faint); text-align: center; letter-spacing: 0.04em; }
-  @media (max-width: 600px) { .container { padding: 24px 16px 60px; } .intro h1 { font-size: 26px; } .doc { grid-template-columns: 1fr; } .doc-meta { flex-direction: row; align-items: center; justify-content: space-between; } }
+
+  /* External links */
+  .ext-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .ext-link {
+    display: block;
+    padding: 20px var(--ts-space-xl);
+    background: var(--ts-surface);
+    border: 1px solid var(--ts-border);
+    border-radius: var(--ts-radius-lg);
+    text-decoration: none;
+    color: var(--ts-text);
+    transition: border-color 140ms, box-shadow 140ms;
+  }
+  .ext-link:hover {
+    border-color: var(--ts-magenta);
+    box-shadow: 0 2px 14px rgba(194,34,153,0.10);
+  }
+  .ext-link .label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--ts-magenta);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 6px;
+    font-family: var(--ts-font-body);
+  }
+  .ext-link .title { font-size: 15px; font-weight: 700; color: var(--ts-text); }
+  .ext-link .desc { margin-top: 4px; font-size: 13px; color: var(--ts-text-muted); }
+
+  /* Footer */
+  footer {
+    margin-top: var(--ts-space-3xl);
+    padding-top: var(--ts-space-lg);
+    border-top: 1px solid var(--ts-border);
+    font-size: 12px;
+    color: var(--ts-text-faint);
+    text-align: center;
+    letter-spacing: 0.04em;
+    line-height: 1.8;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .site-header { padding: 0 var(--ts-space-md); }
+    .hero { padding: var(--ts-space-2xl) var(--ts-space-md); }
+    .hero h1 { font-size: 30px; }
+    .main { padding: var(--ts-space-xl) var(--ts-space-md) var(--ts-space-2xl); }
+    .doc { grid-template-columns: 1fr; }
+    .doc-meta { flex-direction: row; align-items: center; justify-content: space-between; }
+    .header-nav { display: none; }
+  }
 </style>
 </head>
 <body>
 
-<div class="container" id="gate-view">
-  <div class="header">
-    <div class="brand">TrialScreen</div>
-    <div class="confidential">Board Pack · Confidential</div>
+<!-- ── Sticky header ──────────────────────────────────────── -->
+<header class="site-header">
+  <a href="index.html" class="header-brand">
+    <img src="assets/logo-icon.svg" alt="TrialScreen icon" />
+    <span class="wordmark">TrialScreen</span>
+  </a>
+  <nav class="header-nav">
+    <a href="index.html" class="active">Board Pack</a>
+    <a href="library.html?track=sponsor">Sponsor Library</a>
+    <a href="library.html?track=participant">Participant Library</a>
+  </nav>
+</header>
+
+<!-- ── Gate view (password lock) ─────────────────────────── -->
+<div id="gate-view">
+  <div class="gate-page">
+    <div class="gate-card">
+      <div class="gate-eyebrow">TrialScreen · Board Pack</div>
+      <h1>Board Pack Access</h1>
+      <p>Enter the access password provided to you to view board documents, strategy papers and content pipelines.</p>
+      <form id="gate-form" autocomplete="off">
+        <input type="password" id="password" placeholder="Access password" autofocus />
+        <button type="submit" class="unlock-btn">Unlock</button>
+        <div class="error-msg" id="error">Incorrect password. Please try again.</div>
+      </form>
+    </div>
   </div>
-  <form class="gate" id="gate-form" autocomplete="off">
-    <h1>Board Pack Access</h1>
-    <p>Enter the access password provided to you to view board documents, strategy papers and content pipelines.</p>
-    <input type="password" id="password" placeholder="Access password" autofocus />
-    <button type="submit">Unlock</button>
-    <div class="error" id="error">Incorrect password. Please try again.</div>
-  </form>
 </div>
 
-<div class="container content" id="content-view">
-  <div class="header">
-    <div class="brand">TrialScreen</div>
-    <div class="confidential">Confidential</div>
-  </div>
-  <div class="intro">
-    <h1>Board Pack</h1>
-    <p class="subtitle">Strategy, competitive analysis, content pipelines, and visual assets.</p>
-    <p class="date">April 2026</p>
-  </div>
-  <div class="section-title">For the Board</div>
-  <p class="section-desc">The three documents designed to be read together: the in-meeting decision brief, the supporting strategy, and the presentation deck.</p>
-  <ul class="doc-list" id="board-docs"></ul>
-  <div class="section-title">Content Pipelines</div>
-  <p class="section-desc">Fully-written first-draft content ready for editorial review, segmented by audience.</p>
-  <ul class="doc-list" id="pipeline-docs"></ul>
-  <div class="section-title">Visual Assets</div>
-  <p class="section-desc">Branded social media posts combining AI-generated photography with TrialScreen identity.</p>
-  <div class="asset-grid" id="asset-grid"></div>
-  <div class="section-title">Live Tools</div>
-  <p class="section-desc">Working prototypes linked from this pack.</p>
-  <div class="links" id="ext-links"></div>
-  <footer>TrialScreen · Board Pack · April 2026<br />Confidential — do not distribute outside authorised recipients.</footer>
+<!-- ── Content view (unlocked) ───────────────────────────── -->
+<div class="content" id="content-view">
+
+  <!-- Purple gradient hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <img src="assets/logo-primary-white.svg" alt="TrialScreen" class="hero-logo" />
+      <h1>Board Pack</h1>
+      <p class="hero-sub">Strategy, competitive analysis, content pipelines, and visual assets.</p>
+      <p class="hero-date">May 2026</p>
+    </div>
+  </section>
+
+  <main class="main">
+
+    <!-- Series A -->
+    <div class="section-header">
+      <div class="section-label">Series A · May 2026</div>
+      <div class="section-desc">Investor-facing materials for the $5M Series A raise at $15M pre-money. Target close 30 May 2026. The brand book is the single source of truth for all future content.</div>
+    </div>
+    <ul class="doc-list" id="series-a-docs"></ul>
+
+    <!-- For the Board -->
+    <div class="section-header">
+      <div class="section-label">For the Board</div>
+      <div class="section-desc">The three documents designed to be read together: the in-meeting decision brief, the supporting strategy, and the presentation deck.</div>
+    </div>
+    <ul class="doc-list" id="board-docs"></ul>
+
+    <!-- Content Pipelines -->
+    <div class="section-header">
+      <div class="section-label">Content Pipelines</div>
+      <div class="section-desc">Fully-written first-draft content ready for editorial review, segmented by audience.</div>
+    </div>
+    <ul class="doc-list" id="pipeline-docs"></ul>
+
+    <!-- Visual Assets -->
+    <div class="section-header">
+      <div class="section-label">Visual Assets</div>
+      <div class="section-desc">Branded social media posts combining AI-generated photography with TrialScreen identity.</div>
+    </div>
+    <div class="asset-section">
+      <div class="asset-grid" id="asset-grid"></div>
+    </div>
+
+    <!-- Live Tools -->
+    <div class="section-header">
+      <div class="section-label">Live Tools</div>
+      <div class="section-desc">Working prototypes linked from this pack.</div>
+    </div>
+    <div class="ext-links" id="ext-links"></div>
+
+    <footer>
+      CONFIDENTIAL · TrialScreen Board Pack · May 2026<br />
+      &copy; 2026 TrialScreen. Confidential — do not distribute outside authorised recipients.
+    </footer>
+  </main>
+
 </div>
 
 <script>
@@ -109,6 +467,12 @@
     const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: enc.encode(SALT), iterations: ITERATIONS, hash: 'SHA-256' }, keyMaterial, 256);
     return Array.from(new Uint8Array(bits)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
+
+  const seriesADocs = [
+    { title: 'Series A Investor Deck', desc: '22 slides · $5M on $15M pre-money · Close 30 May 2026', type: 'PPTX', url: 'documents/TrialScreen_SeriesA_Deck.pptx' },
+    { title: 'Series A Board Pack', desc: '34 pages · Full strategic analysis, risk register, valuation defence, evidence gaps', type: 'PDF', url: 'documents/TrialScreen_SeriesA_BoardPack.pdf' },
+    { title: 'Brand Book v1.0', desc: '14 pages · Logo, colour, typography, voice · Single source of truth', type: 'PDF', url: 'documents/TrialScreen_Brand_Book.pdf' }
+  ];
 
   const boardDocs = [
     { title: 'Board Decision Brief', desc: '3 pages · 8 decisions, recommendations, 30/60/90-day plan, budget', type: 'PDF', url: 'documents/trialscreen-board-decision-brief.pdf' },
@@ -136,7 +500,16 @@
   ];
 
   function renderDocs(items, containerId) {
-    const html = items.map(d => `<li class="doc"><div class="doc-body"><h3>${d.title}</h3><p>${d.desc}</p></div><div class="doc-meta"><span class="doc-type">${d.type}</span><a class="doc-link" href="${d.url}" target="_blank" rel="noopener">Open</a></div></li>`).join('');
+    const html = items.map(d => `<li class="doc">
+      <div class="doc-body">
+        <h3>${d.title}</h3>
+        <p>${d.desc}</p>
+      </div>
+      <div class="doc-meta">
+        <span class="doc-type">${d.type}</span>
+        <a class="doc-link" href="${d.url}" target="_blank" rel="noopener">Open</a>
+      </div>
+    </li>`).join('');
     document.getElementById(containerId).innerHTML = html;
   }
 
@@ -153,6 +526,7 @@
   function unlock() {
     document.getElementById('gate-view').style.display = 'none';
     document.getElementById('content-view').classList.add('unlocked');
+    renderDocs(seriesADocs, 'series-a-docs');
     renderDocs(boardDocs, 'board-docs');
     renderDocs(pipelineDocs, 'pipeline-docs');
     renderAssets();

@@ -1,0 +1,150 @@
+/* TrialScreen Brand Tokens — CSS custom properties
+ * Single source of truth. Import in every site/web app.
+ * Source: /home/user/workspace/brand/tokens.json (version 1.0.0)
+ * Updated: 2026-04-23
+ */
+
+:root {
+  /* ── Primary brand ──────────────────────────────────────── */
+  --ts-purple:        #773A96;  /* Logo purple. Primary brand. */
+  --ts-magenta:       #C22299;  /* Logo magenta. Primary accent. */
+
+  /* ── Secondary ──────────────────────────────────────────── */
+  --ts-purple-light:  #954CF6;  /* Gradient partner */
+  --ts-magenta-cta:   #C43C96;  /* CTA variant */
+  --ts-blush:         #F9BAE0;  /* Soft accent */
+
+  /* ── Neutral ────────────────────────────────────────────── */
+  --ts-bg:            #FFFFFF;
+  --ts-surface:       #FCF4FB;  /* subtle pink-white card */
+  --ts-surface-alt:   #F6F2FF;  /* subtle purple-white card */
+  --ts-border:        #E6E0EE;
+  --ts-text:          #1A1A2E;
+  --ts-text-muted:    #6B6880;
+  --ts-text-faint:    #B0ADBD;
+  --ts-dark-bg:       #11110D;  /* Dark hero / cover */
+
+  /* ── Semantic ───────────────────────────────────────────── */
+  --ts-success:       #48B193;
+  --ts-warning:       #FFB01A;
+  --ts-error:         #EA4F6A;
+
+  /* ── Chart palette (ordered) ─────────────────────────────── */
+  --ts-chart-1: #773A96;
+  --ts-chart-2: #C22299;
+  --ts-chart-3: #954CF6;
+  --ts-chart-4: #48B193;
+  --ts-chart-5: #F9BAE0;
+  --ts-chart-6: #FFB01A;
+  --ts-chart-7: #EA4F6A;
+  --ts-chart-8: #6B6880;
+
+  /* ── Gradients ──────────────────────────────────────────── */
+  --ts-grad-hero:     linear-gradient(135deg, #773A96 0%, #954CF6 100%);
+  --ts-grad-subtle:   linear-gradient(135deg, #F6F2FF 0%, #FCF4FB 100%);
+
+  /* ── Typography ─────────────────────────────────────────── */
+  --ts-font-display:  'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --ts-font-body:     'Inter', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+
+  --ts-text-hero:     64px;
+  --ts-text-h1:       48px;
+  --ts-text-h2:       32px;
+  --ts-text-h3:       24px;
+  --ts-text-body:     16px;
+  --ts-text-small:    14px;
+  --ts-text-caption:  12px;
+
+  /* ── Spacing ────────────────────────────────────────────── */
+  --ts-space-xs:   4px;
+  --ts-space-sm:   8px;
+  --ts-space-md:  16px;
+  --ts-space-lg:  24px;
+  --ts-space-xl:  32px;
+  --ts-space-2xl: 48px;
+  --ts-space-3xl: 64px;
+
+  /* ── Radius ─────────────────────────────────────────────── */
+  --ts-radius-sm: 4px;
+  --ts-radius-md: 8px;
+  --ts-radius-lg: 12px;
+  --ts-radius-xl: 24px;
+  --ts-radius-pill: 9999px;
+
+  /* ── Motion ─────────────────────────────────────────────── */
+  --ts-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ts-dur-fast:   120ms;
+  --ts-dur-medium: 240ms;
+  --ts-dur-slow:   480ms;
+}
+
+/* Dark-mode overrides — for dark sections within otherwise-light sites.
+   Apply via `<section class="ts-dark">` or `<body data-theme="dark">`. */
+.ts-dark, [data-theme="dark"] {
+  --ts-bg:         #11110D;
+  --ts-surface:    #1C1B19;
+  --ts-surface-alt:#201F1D;
+  --ts-border:     #393836;
+  --ts-text:       #F7F6F2;
+  --ts-text-muted: #B0ADBD;
+  --ts-text-faint: #6B6880;
+}
+
+/* Base type resets — import after a CSS reset */
+body {
+  font-family: var(--ts-font-body);
+  font-size: var(--ts-text-body);
+  color: var(--ts-text);
+  background: var(--ts-bg);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .ts-display {
+  font-family: var(--ts-font-display);
+  font-weight: 700;
+  color: var(--ts-text);
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+h1 { font-size: var(--ts-text-h1); }
+h2 { font-size: var(--ts-text-h2); }
+h3 { font-size: var(--ts-text-h3); }
+
+a {
+  color: var(--ts-purple);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--ts-dur-fast) var(--ts-ease);
+}
+a:hover { color: var(--ts-magenta); }
+
+/* Utility classes for common patterns */
+.ts-btn {
+  display: inline-flex; align-items: center; gap: var(--ts-space-sm);
+  padding: 12px 20px;
+  background: var(--ts-purple);
+  color: #FFFFFF;
+  font-family: var(--ts-font-body);
+  font-weight: 600;
+  border: none; border-radius: var(--ts-radius-md);
+  cursor: pointer;
+  transition: background var(--ts-dur-fast) var(--ts-ease);
+}
+.ts-btn:hover { background: var(--ts-purple-light); }
+.ts-btn--accent { background: var(--ts-magenta); }
+.ts-btn--accent:hover { background: var(--ts-magenta-cta); }
+
+.ts-card {
+  background: var(--ts-surface-alt);
+  border: 1px solid var(--ts-border);
+  border-radius: var(--ts-radius-lg);
+  padding: var(--ts-space-lg);
+}
+
+.ts-hero {
+  background: var(--ts-grad-hero);
+  color: #FFFFFF;
+}
+.ts-hero h1, .ts-hero h2, .ts-hero h3 { color: #FFFFFF; }

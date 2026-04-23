@@ -5,189 +5,480 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>TrialScreen — Content Library</title>
 <meta name="robots" content="noindex, nofollow" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="icon" type="image/x-icon" href="favicon.ico" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<script src="auth.js"></script>
+<style>body.ts-locked > :not(script) { visibility: hidden; } body.ts-locked [role="dialog"] { visibility: visible; } body.ts-locked [role="dialog"] * { visibility: visible; }</style>
+<script>document.documentElement.addEventListener('DOMContentLoaded', () => {}); if (!window.TrialScreenAuth || !window.TrialScreenAuth.isUnlocked()) { document.addEventListener('DOMContentLoaded', () => document.body.classList.add('ts-locked')); }</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/tokens.css" />
 <style>
-  :root {
-    --teal: #01696F; --teal-hover: #0C4E54; --teal-light: #E8F0F1;
-    --text: #28251D; --muted: #7A7974; --faint: #BAB9B4;
-    --border: #D4D1CA; --bg: #F7F6F2; --surface: #FFFFFF; --surface-alt: #FBFBF9;
-    --amber: #964219;
-  }
-  *, *::before, *::after { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100dvh; }
   body {
-    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
-    font-size: 15px; line-height: 1.55; color: var(--text); background: var(--bg);
+    font-family: var(--ts-font-body);
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ts-text);
+    background: var(--ts-bg);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-  a { color: var(--teal); text-decoration: none; }
-  a:hover { text-decoration: underline; }
+  h1, h2, h3, h4 {
+    font-family: var(--ts-font-display);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    color: var(--ts-text);
+  }
+  a { color: var(--ts-purple); text-decoration: none; transition: color 120ms; }
+  a:hover { color: var(--ts-magenta); }
 
-  .topbar {
-    position: sticky; top: 0; z-index: 50;
-    background: var(--surface); border-bottom: 1px solid var(--border);
-    padding: 14px 32px; display: flex; align-items: center; gap: 24px;
+  /* ── Sticky header ──────────────────────────────── */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: 64px;
+    background: #FFFFFF;
+    border-bottom: 1px solid var(--ts-border);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--ts-space-xl);
+    gap: var(--ts-space-md);
     justify-content: space-between;
   }
-  .topbar .back {
-    font-size: 13px; color: var(--muted); font-weight: 500;
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--ts-space-lg);
   }
-  .topbar .brand {
-    font-size: 13px; font-weight: 700; letter-spacing: 0.15em;
-    color: var(--teal); text-transform: uppercase;
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--ts-space-sm);
+    text-decoration: none;
+    color: var(--ts-text);
   }
-  .topbar .right { display: flex; gap: 18px; font-size: 13px; color: var(--muted); }
+  .header-brand img {
+    width: 28px;
+    height: 28px;
+    display: block;
+    flex-shrink: 0;
+  }
+  .header-brand .wordmark {
+    font-family: var(--ts-font-display);
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--ts-text);
+    letter-spacing: -0.01em;
+  }
+  .header-back {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ts-text-muted);
+    text-decoration: none;
+    transition: color 120ms;
+  }
+  .header-back:hover { color: var(--ts-purple); }
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--ts-space-lg);
+  }
+  .header-nav a {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ts-text-muted);
+    text-decoration: none;
+    transition: color 120ms;
+    padding: 4px 0;
+    border-bottom: 2px solid transparent;
+  }
+  .header-nav a:hover { color: var(--ts-purple); }
+  .header-nav a.active {
+    color: var(--ts-purple);
+    font-weight: 600;
+    border-bottom-color: var(--ts-purple);
+  }
 
-  .container { max-width: 1320px; margin: 0 auto; padding: 32px; }
+  /* ── Page layout ────────────────────────────────── */
+  .container { max-width: 1320px; margin: 0 auto; padding: var(--ts-space-xl) var(--ts-space-xl); }
 
-  .page-title { font-size: 30px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 8px; }
-  .page-subtitle { font-size: 15px; color: var(--muted); margin: 0 0 24px; max-width: 720px; }
+  .page-header {
+    padding: var(--ts-space-2xl) var(--ts-space-xl);
+    background: var(--ts-surface-alt);
+    border-bottom: 1px solid var(--ts-border);
+  }
+  .page-header-inner { max-width: 1320px; margin: 0 auto; }
+  .page-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--ts-space-xs);
+    color: var(--ts-text);
+  }
+  .page-subtitle {
+    font-size: 15px;
+    color: var(--ts-text-muted);
+    max-width: 720px;
+    line-height: 1.6;
+  }
 
+  /* ── Filter bar ─────────────────────────────────── */
   .filter-bar {
-    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px;
-    padding: 16px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ts-space-sm);
+    margin-bottom: var(--ts-space-lg);
+    padding: var(--ts-space-md) var(--ts-space-lg);
+    background: #FFFFFF;
+    border: 1px solid var(--ts-border);
+    border-radius: var(--ts-radius-lg);
+    align-items: center;
   }
-  .filter-bar .label {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: var(--muted);
-    text-transform: uppercase; margin-right: 8px; align-self: center;
+  .filter-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--ts-text-muted);
+    text-transform: uppercase;
+    margin-right: var(--ts-space-sm);
+    flex-shrink: 0;
+    font-family: var(--ts-font-body);
   }
   .chip {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 6px 12px; border-radius: 99px; border: 1px solid var(--border);
-    background: var(--surface-alt); font-size: 12px; font-weight: 500; color: var(--text);
-    cursor: pointer; transition: all 0.12s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    border-radius: var(--ts-radius-pill);
+    border: 1.5px solid var(--ts-border);
+    background: #FFFFFF;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ts-text);
+    font-family: var(--ts-font-body);
+    cursor: pointer;
+    transition: all 120ms;
   }
-  .chip:hover { border-color: var(--teal); }
-  .chip.active { background: var(--teal); color: white; border-color: var(--teal); }
-  .chip .count { font-size: 11px; color: var(--muted); }
-  .chip.active .count { color: rgba(255,255,255,0.7); }
+  .chip:hover { border-color: var(--ts-purple); color: var(--ts-purple); }
+  .chip.active {
+    background: var(--ts-magenta);
+    color: #FFFFFF;
+    border-color: var(--ts-magenta);
+  }
+  .chip .count {
+    font-size: 11px;
+    opacity: 0.7;
+  }
+  .chip.active .count { opacity: 0.8; }
 
   .search-input {
-    flex: 1; min-width: 200px;
-    padding: 8px 12px; border: 1px solid var(--border); border-radius: 3px;
-    font-size: 13px; font-family: inherit; color: var(--text); background: var(--surface);
+    flex: 1;
+    min-width: 200px;
+    padding: 8px 14px;
+    border: 1.5px solid var(--ts-border);
+    border-radius: var(--ts-radius-pill);
+    font-size: 13px;
+    font-family: var(--ts-font-body);
+    color: var(--ts-text);
+    background: var(--ts-surface-alt);
     outline: none;
+    transition: border-color 120ms;
   }
-  .search-input:focus { border-color: var(--teal); }
+  .search-input:focus { border-color: var(--ts-purple); }
+  .search-input::placeholder { color: var(--ts-text-faint); }
 
-  .results-meta { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+  /* ── Results meta ───────────────────────────────── */
+  .results-meta {
+    font-size: 13px;
+    color: var(--ts-text-muted);
+    margin-bottom: var(--ts-space-md);
+  }
 
+  /* ── Card grid ──────────────────────────────────── */
   .grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 14px;
   }
   .card {
-    display: flex; flex-direction: column;
-    background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
-    padding: 16px; cursor: pointer; transition: border-color 0.12s, transform 0.12s;
+    display: flex;
+    flex-direction: column;
+    background: #FFFFFF;
+    border: 1px solid var(--ts-border);
+    border-radius: var(--ts-radius-lg);
+    padding: var(--ts-space-md);
+    cursor: pointer;
+    transition: border-color 130ms, transform 130ms, box-shadow 130ms;
     min-height: 180px;
   }
-  .card:hover { border-color: var(--teal); transform: translateY(-2px); }
+  .card:hover {
+    border-color: var(--ts-purple);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(119,58,150,0.10);
+    background: var(--ts-surface);
+  }
 
   .card-meta {
-    display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px;
-    font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
   .badge {
-    padding: 3px 8px; border-radius: 2px; background: var(--teal-light); color: var(--teal);
+    padding: 3px 9px;
+    border-radius: var(--ts-radius-pill);
+    background: rgba(119,58,150,0.1);
+    color: var(--ts-purple);
+    font-family: var(--ts-font-body);
   }
-  .badge.muted { background: var(--surface-alt); color: var(--muted); border: 1px solid var(--border); }
+  .badge.muted {
+    background: var(--ts-surface-alt);
+    color: var(--ts-text-muted);
+    border: 1px solid var(--ts-border);
+  }
 
-  .card-id { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--faint); font-weight: 500; margin-bottom: 6px; }
-  .card-title { font-size: 14px; font-weight: 700; line-height: 1.35; color: var(--text); margin: 0 0 6px; }
-  .card-subtitle { font-size: 12px; color: var(--muted); margin: 0 0 10px; line-height: 1.4; }
+  .card-id {
+    font-size: 11px;
+    font-family: 'JetBrains Mono', 'Fira Mono', monospace;
+    color: var(--ts-text-faint);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--ts-text);
+    margin: 0 0 6px;
+    font-family: var(--ts-font-display);
+  }
+  .card-subtitle { font-size: 12px; color: var(--ts-text-muted); margin: 0 0 10px; line-height: 1.4; }
 
   .card-preview {
-    font-size: 12px; color: var(--muted); line-height: 1.5;
-    display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;
-    overflow: hidden; flex: 1;
+    font-size: 12px;
+    color: var(--ts-text-muted);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
   }
 
   .card-footer {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--ts-border);
   }
-  .card-footer .open { font-size: 11px; font-weight: 600; color: var(--teal); letter-spacing: 0.04em; }
+  .card-footer .section-tag {
+    font-size: 11px;
+    color: var(--ts-text-faint);
+  }
+  .card-footer .open {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ts-purple);
+    letter-spacing: 0.04em;
+  }
 
-  /* Detail modal */
+  /* ── Detail modal ───────────────────────────────── */
   .modal-backdrop {
-    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45);
-    z-index: 100; overflow-y: auto; padding: 48px 20px;
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,26,46,0.55);
+    z-index: 200;
+    overflow-y: auto;
+    padding: 48px 20px;
   }
   .modal-backdrop.open { display: block; }
   .modal {
-    max-width: 800px; margin: 0 auto; background: var(--surface);
-    border-radius: 4px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-width: 800px;
+    margin: 0 auto;
+    background: #FFFFFF;
+    border-radius: var(--ts-radius-xl);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(26,26,46,0.28);
   }
   .modal-header {
-    display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;
-    padding: 28px 32px 20px; border-bottom: 1px solid var(--border); background: var(--bg);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 28px 32px 20px;
+    background: var(--ts-grad-hero);
+    color: #FFFFFF;
+  }
+  .modal-header .meta {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 10px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .modal-header .id-tag {
+    font-family: 'JetBrains Mono', 'Fira Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.65);
+    padding: 2px 8px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: var(--ts-radius-sm);
+  }
+  .modal-header .badge-modal {
+    padding: 2px 10px;
+    border-radius: var(--ts-radius-pill);
+    background: rgba(255,255,255,0.2);
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: var(--ts-font-body);
+  }
+  .modal-header h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #FFFFFF;
+    font-family: var(--ts-font-display);
+  }
+  .modal-header .modal-subtitle {
+    margin: 6px 0 0;
+    font-size: 14px;
+    color: rgba(255,255,255,0.8);
+    font-family: var(--ts-font-body);
+  }
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+    align-items: flex-end;
+    flex-shrink: 0;
   }
   .modal-close {
-    padding: 6px 10px; font-size: 13px; border: 1px solid var(--border); border-radius: 3px;
-    background: var(--surface); color: var(--muted); cursor: pointer; font-family: inherit;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1.5px solid rgba(255,255,255,0.4);
+    border-radius: var(--ts-radius-md);
+    background: rgba(255,255,255,0.12);
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: var(--ts-font-body);
     white-space: nowrap;
+    transition: background 120ms;
   }
-  .modal-close:hover { border-color: var(--teal); color: var(--teal); }
-  .modal-body { padding: 24px 32px 32px; }
-  .modal-body .meta { font-size: 12px; color: var(--muted); margin-bottom: 18px; display: flex; gap: 10px; flex-wrap: wrap; }
-  .modal-body .id-tag {
-    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--faint);
-    padding: 2px 8px; border: 1px solid var(--border); border-radius: 2px;
-  }
+  .modal-close:hover { background: rgba(255,255,255,0.25); }
 
   .copy-btn {
-    padding: 8px 14px; font-size: 13px; font-weight: 600;
-    background: var(--teal); color: white; border: none; border-radius: 3px;
-    cursor: pointer; font-family: inherit;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    background: var(--ts-magenta);
+    color: #FFFFFF;
+    border: none;
+    border-radius: var(--ts-radius-md);
+    cursor: pointer;
+    font-family: var(--ts-font-body);
+    white-space: nowrap;
+    transition: background 120ms;
   }
-  .copy-btn:hover { background: var(--teal-hover); }
-  .copy-btn.copied { background: var(--amber); }
+  .copy-btn:hover { background: var(--ts-magenta-cta); }
+  .copy-btn.copied { background: var(--ts-success); }
 
+  .modal-body { padding: 24px 32px 32px; }
   .content-body {
-    white-space: pre-wrap; font-size: 14px; line-height: 1.65; color: var(--text);
-    background: var(--surface-alt); border: 1px solid var(--border); border-radius: 3px;
-    padding: 20px; margin-top: 16px;
+    white-space: pre-wrap;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ts-text);
+    background: var(--ts-surface-alt);
+    border: 1px solid var(--ts-border);
+    border-radius: var(--ts-radius-lg);
+    padding: var(--ts-space-lg);
+    margin-top: var(--ts-space-md);
     max-height: none;
     overflow-wrap: break-word;
+    font-family: var(--ts-font-body);
   }
   .content-body strong { font-weight: 700; }
-  .content-body table { border-collapse: collapse; margin: 10px 0; font-size: 13px; }
-  .content-body th, .content-body td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; }
-  .content-body th { background: var(--bg); font-weight: 700; }
-  .content-body code { background: var(--bg); padding: 1px 5px; border-radius: 2px; font-size: 13px; }
+  .content-body table { border-collapse: collapse; margin: 10px 0; font-size: 13px; width: 100%; }
+  .content-body th, .content-body td { border: 1px solid var(--ts-border); padding: 6px 10px; text-align: left; }
+  .content-body th { background: #FFFFFF; font-weight: 700; }
+  .content-body code { background: #FFFFFF; padding: 1px 5px; border-radius: var(--ts-radius-sm); font-size: 13px; }
+  .content-body a { color: var(--ts-purple); }
+  .content-body a:hover { color: var(--ts-magenta); }
+  .content-body hr { border: none; border-top: 1px solid var(--ts-border); margin: 14px 0; }
 
-  footer { margin-top: 60px; padding: 24px 0; border-top: 1px solid var(--border); font-size: 12px; color: var(--faint); text-align: center; }
+  /* ── Footer ─────────────────────────────────────── */
+  footer {
+    margin-top: var(--ts-space-3xl);
+    padding: var(--ts-space-lg) 0;
+    border-top: 1px solid var(--ts-border);
+    font-size: 12px;
+    color: var(--ts-text-faint);
+    text-align: center;
+    letter-spacing: 0.04em;
+    line-height: 1.8;
+  }
 
+  /* ── Responsive ─────────────────────────────────── */
   @media (max-width: 640px) {
-    .container { padding: 20px 16px; }
+    .container { padding: var(--ts-space-md) var(--ts-space-md); }
+    .page-header { padding: var(--ts-space-xl) var(--ts-space-md); }
     .grid { grid-template-columns: 1fr; }
     .modal-header, .modal-body { padding-left: 20px; padding-right: 20px; }
-    .topbar { padding: 12px 16px; }
+    .site-header { padding: 0 var(--ts-space-md); }
+    .header-back { display: none; }
   }
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div style="display: flex; gap: 24px; align-items: center;">
-    <a href="index.html" class="back">← Back to pack</a>
-    <div class="brand">TrialScreen</div>
+<!-- ── Sticky header ──────────────────────────────────────── -->
+<header class="site-header">
+  <div class="header-left">
+    <a href="index.html" class="header-brand">
+      <img src="assets/logo-icon.svg" alt="TrialScreen icon" />
+      <span class="wordmark">TrialScreen</span>
+    </a>
+    <a href="index.html" class="header-back">← Board Pack</a>
   </div>
-  <div class="right" id="track-switcher">
-    <a href="?track=sponsor" id="link-sponsor">Sponsor content</a>
-    <a href="?track=participant" id="link-participant">Participant content</a>
+  <nav class="header-nav">
+    <a href="index.html">Board Pack</a>
+    <a href="?track=sponsor" id="link-sponsor">Sponsor Library</a>
+    <a href="?track=participant" id="link-participant">Participant Library</a>
+  </nav>
+</header>
+
+<!-- ── Page header ───────────────────────────────────────── -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <h1 class="page-title" id="page-title">Loading…</h1>
+    <p class="page-subtitle" id="page-subtitle"></p>
   </div>
 </div>
 
+<!-- ── Main content ─────────────────────────────────────── -->
 <div class="container">
-  <h1 class="page-title" id="page-title">Loading…</h1>
-  <p class="page-subtitle" id="page-subtitle"></p>
-
-  <div class="filter-bar">
-    <span class="label">Filter</span>
+  <div class="filter-bar" style="margin-top: var(--ts-space-lg);">
+    <span class="filter-label">Filter</span>
     <div id="type-chips" style="display: flex; gap: 6px; flex-wrap: wrap;"></div>
     <input class="search-input" id="search" placeholder="Search title, body, or ID…" />
   </div>
@@ -197,25 +488,25 @@
   <div class="grid" id="grid"></div>
 
   <footer>
-    TrialScreen · Content Library · April 2026<br/>
-    Confidential — first-draft content pending editorial review.
+    CONFIDENTIAL · TrialScreen Board Pack · May 2026<br />
+    &copy; 2026 TrialScreen. First-draft content pending editorial review.
   </footer>
 </div>
 
-<!-- Modal -->
+<!-- ── Modal ─────────────────────────────────────────────── -->
 <div class="modal-backdrop" id="modal-backdrop">
   <div class="modal">
     <div class="modal-header">
       <div style="flex: 1;">
         <div class="meta">
           <span class="id-tag" id="modal-id"></span>
-          <span class="badge" id="modal-type"></span>
-          <span class="badge muted" id="modal-section"></span>
+          <span class="badge-modal" id="modal-type"></span>
+          <span class="badge-modal" id="modal-section" style="background:rgba(255,255,255,0.12);"></span>
         </div>
-        <h2 id="modal-title" style="margin: 0; font-size: 22px; font-weight: 700; line-height: 1.3;"></h2>
-        <p id="modal-subtitle" style="margin: 8px 0 0; font-size: 14px; color: var(--muted);"></p>
+        <h2 id="modal-title"></h2>
+        <p class="modal-subtitle" id="modal-subtitle"></p>
       </div>
-      <div style="display: flex; gap: 8px; flex-direction: column; align-items: flex-end;">
+      <div class="modal-actions">
         <button class="modal-close" onclick="closeModal()">Close</button>
         <button class="copy-btn" id="copy-btn">Copy content</button>
       </div>
@@ -228,6 +519,10 @@
 
 <script>
 (async () => {
+  // Require auth before rendering anything sensitive
+  await window.TrialScreenAuth.requireAuth({ backHref: 'index.html' });
+  document.body.classList.remove('ts-locked');
+
   // Read track from URL
   const params = new URLSearchParams(window.location.search);
   const track = params.get('track') === 'participant' ? 'participant' : 'sponsor';
@@ -235,8 +530,8 @@
   // Update nav highlighting
   const linkSponsor = document.getElementById('link-sponsor');
   const linkParticipant = document.getElementById('link-participant');
-  if (track === 'sponsor') { linkSponsor.style.color = 'var(--teal)'; linkSponsor.style.fontWeight = '700'; }
-  else { linkParticipant.style.color = 'var(--teal)'; linkParticipant.style.fontWeight = '700'; }
+  if (track === 'sponsor') { linkSponsor.classList.add('active'); }
+  else { linkParticipant.classList.add('active'); }
 
   // Update page title
   if (track === 'sponsor') {
@@ -255,7 +550,7 @@
     const res = await fetch(`content/${track}.json`);
     items = await res.json();
   } catch (err) {
-    document.getElementById('grid').innerHTML = `<div style="color: var(--amber); padding: 20px;">Failed to load content. ${err.message}</div>`;
+    document.getElementById('grid').innerHTML = `<div style="color: var(--ts-error); padding: 20px;">Failed to load content. ${err.message}</div>`;
     return;
   }
 
@@ -322,11 +617,11 @@
 
     const grid = document.getElementById('grid');
     if (filtered.length === 0) {
-      grid.innerHTML = `<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--muted);">No items match these filters.</div>`;
+      grid.innerHTML = `<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--ts-text-muted);">No items match these filters.</div>`;
       return;
     }
 
-    grid.innerHTML = filtered.map((item, idx) => `
+    grid.innerHTML = filtered.map((item) => `
       <div class="card" data-idx="${items.indexOf(item)}">
         <div class="card-meta">
           <span class="badge">${escapeHtml(item.type)}</span>
@@ -336,7 +631,7 @@
         ${item.subtitle ? `<div class="card-subtitle">${escapeHtml(item.subtitle)}</div>` : ''}
         <div class="card-preview">${escapeHtml(makePreview(item.body))}</div>
         <div class="card-footer">
-          <span style="font-size: 11px; color: var(--faint);">${escapeHtml(item.section || '')}</span>
+          <span class="section-tag">${escapeHtml(item.section || '')}</span>
           <span class="open">Open →</span>
         </div>
       </div>
@@ -368,11 +663,11 @@
     // Links
     html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
     // Headings (#### -> h4, ### -> h3, etc.)
-    html = html.replace(/^####\s+(.+)$/gm, '<h4 style="font-size:14px;font-weight:700;margin:14px 0 6px;">$1</h4>');
-    html = html.replace(/^###\s+(.+)$/gm, '<h3 style="font-size:15px;font-weight:700;margin:16px 0 8px;">$1</h3>');
-    html = html.replace(/^##\s+(.+)$/gm, '<h2 style="font-size:17px;font-weight:700;margin:18px 0 10px;">$1</h2>');
+    html = html.replace(/^####\s+(.+)$/gm, '<h4 style="font-size:14px;font-weight:700;margin:14px 0 6px;font-family:var(--ts-font-display);">$1</h4>');
+    html = html.replace(/^###\s+(.+)$/gm, '<h3 style="font-size:15px;font-weight:700;margin:16px 0 8px;font-family:var(--ts-font-display);">$1</h3>');
+    html = html.replace(/^##\s+(.+)$/gm, '<h2 style="font-size:17px;font-weight:700;margin:18px 0 10px;font-family:var(--ts-font-display);">$1</h2>');
     // Horizontal rule
-    html = html.replace(/^\s*---\s*$/gm, '<hr style="border:none;border-top:1px solid var(--border);margin:14px 0;"/>');
+    html = html.replace(/^\s*---\s*$/gm, '<hr />');
     return html;
   }
 
